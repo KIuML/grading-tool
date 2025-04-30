@@ -4,7 +4,7 @@ import { GradeMeasure } from "./measure.js";
 
 const ethics = new Criterion("ethics", { en: "Working Ethics", de: "Arbeitsweise" });
 const ethicsFamiliarization = new Criterion("familiarization", { en: "Familiarization with the topic", de: "Einarbeitung in die Aufgabenstellung" }, ethics);
-const ethicsAutonomy = new Criterion("autonomy", { en: "Familiarization with the topic", de: "Eigenständigkeit" }, ethics);
+const ethicsAutonomy = new Criterion("autonomy", { en: "Autonomy of the student", de: "Eigenständigkeit" }, ethics);
 const ethicsCommitment = new Criterion("commitment", { en: "Commitment/motivation of the student", de: "Einsatz und Engagement" }, ethics);
 const ethicsResources = new Criterion("resources", { en: "Use of the offered ressources (tools, machines, etc.)", de: "Nutzung von Ressourcen (Tools, Rechner, etc.)" }, ethics);
 const ethicsCriteria = [
