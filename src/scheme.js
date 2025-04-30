@@ -1,13 +1,20 @@
 import { Criterion } from "./criterion.js";
-import { localizeGrade, weightedAverage } from "./gradeUtils.js";
+import { localizeGrade, weightedAverage, gradeToFullString, toNearestGrade } from "./gradeUtils.js";
+import { strings } from "./strings.js";
 
-export const aggregateGrade = new Criterion("grade", { en: "Grade", de: "Note" });
+export const aggregateGrade = new Criterion("grade", strings.grade);
 
 export class Scheme {
+    showGroups = true
+    roundAggregate = true
+
     constructor(names, descriptions, criteria) {
-        this.names = names;
-        this.descriptions = descriptions;
-        this.criteria = criteria;
+        if (names != null)
+            this.names = names;
+        if (descriptions != null)
+            this.descriptions = descriptions;
+        if (criteria != null)
+            this.criteria = criteria;
     }
 
     getCriterion(key) {
@@ -45,6 +52,8 @@ export class Scheme {
     }
 
     get groupCriteria() {
+        if (!this.showGroups)
+            return [];
         return [...new Set(
             this.criteria.map(criterion => criterion.group).filter(group => group != null)
         )];
@@ -52,6 +61,14 @@ export class Scheme {
 
     get allCriteria() {
         return [...this.criteria, ...this.groupCriteria, ...this.aggregateCriteria];
+    }
+
+    get defaultGrades() {
+        const defaultGrades = {};
+        for (let criterion of this.criteria) {
+            defaultGrades[criterion.key] = NaN;
+        }
+        return defaultGrades;
     }
 
     aggregateGroupGrades(groupGrades) {
@@ -63,23 +80,97 @@ export class Scheme {
     computeGrades(criteriaGrades) {
         const groupGrades = this.computeGroupGrades(criteriaGrades);
         const aggregateGrades = this.aggregateGroupGrades(groupGrades);
-        return { ...groupGrades, ...aggregateGrades };
+        if (this.showGroups)
+            return { ...groupGrades, ...aggregateGrades };
+        return aggregateGrades;
     }
 
-    toCSV(grades, lang = "en") {
-        let csv = lang === "en" ? "Criterion;Grade\n" : "Kriterium;Note\n";
+    toRow(grades, lang = "en") {
+        return this.criteria.map(criterion => {
+            const grade = grades[criterion.key]
+            if (grade == null || isNaN(grade))
+                return "";
+            return localizeGrade(grade, lang);
+        }).join("\t");
+    }
+
+    toCSV(grades, lang = "en", separator = ";") {
+        let csv = `${strings.criterion[lang]}${separator}${strings.grade[lang]}\n`;
+
+        const aggregateCriteria = new Set(this.aggregateCriteria);
 
         for (let criterion of this.allCriteria) {
             let grade = grades[criterion.key];
             if (grade == null || isNaN(grade))
                 grade = "";
-            csv += `${criterion.names[lang]};${localizeGrade(grade, lang)}\n`;
+            else if (aggregateCriteria.has(criterion))
+                grade = toNearestGrade(grade);
+
+            grade = localizeGrade(grade, lang);
+            if (separator == "," && lang == "de")
+                grade = `"${grade}"`;
+            csv += `${criterion.names[lang]}${separator}${grade}\n`;
         }
 
         return csv;
     }
 
     toLaTeX(grades, lang = "en") {
+        let tex = [
+            `\\subsection*{${strings.individualGrades[lang]}:}`,
+            "",
+            "\\begin{center}",
+            "\\begin{tabular}{lcc}",
+            "\\hline",
+            `\\textbf{${strings.criterion[lang]}} & \\textbf{${strings.grade[lang]}} \\\\`,
+            "\\hline",
+            ""
+        ].join("\n");
+
+        let lastGroup = null;
+        for (let criterion of this.criteria) {
+            if (this.showGroups && criterion.group != null && criterion.group != lastGroup) {
+                let grade = grades[criterion.key];
+                if (grade == null || isNaN(grade))
+                    grade = "-";
+                else
+                    grade = localizeGrade(grade, lang);
+                tex += `\\textbf{${criterion.group.names[lang].replace("&", "\\&")}} & \\\\ % ${grade}\n`;
+            }
+            let grade = grades[criterion.key];
+            if (grade == null || isNaN(grade))
+                grade = "-";
+            else
+                grade = localizeGrade(grade, lang);
+            tex += `${criterion.names[lang].replace("&", "\\&")} & ${grade} \\\\\n`
+            lastGroup = criterion.group;
+        }
+
+        tex += [
+            "\\end{tabular}", "\\end{center}", "",
+            `\\subsection*{${strings.remarks[lang]}:}`,
+            "", "",
+            `\\subsection*{${strings[this.aggregateCriteria.length == 1 ? "aggResult" : "aggResults"][lang]}:}`,
+            ""
+        ].join("\n");
+
+        tex += this.aggregateCriteria.map(criterion => {
+            const grade = grades[criterion.key];
+            let shownGrade = grade;
+            if (this.roundAggregate)
+                shownGrade = toNearestGrade(grade);
+            shownGrade = gradeToFullString(shownGrade, lang);
+            if (this.roundAggregate)
+                shownGrade += ` % ${localizeGrade(grade, lang)}`;
+            if (this.aggregateCriteria.length > 1)
+                return `\\textbf{${criterion.names[lang]}:}\n${shownGrade}`;
+            return shownGrade;
+        }).join("\n\\qquad\n");
+
+        return tex;
+    }
+
+    toMd(grades, lang = "en") {
         // TODO
     }
 }

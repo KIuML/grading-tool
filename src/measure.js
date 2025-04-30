@@ -2,7 +2,6 @@ import { gradeToUnit, unitToGrade } from "./gradeUtils.js";
 
 export class Measure {
     constructor(...kvs) {
-        console.log(kvs);
         const elements = new Set();
         for (let [subset, _] of kvs)
             for (let e of subset)

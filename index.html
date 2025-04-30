@@ -31,6 +31,9 @@
                     <option value="de">DE</option>
                 </select>
             </div>
+            <div>
+                <input type="button" id="reset" value="Reset">
+            </div>
         </div>
         <table id="grade-table">
             <thead>
@@ -41,14 +44,17 @@
             </thead>
             <tbody></tbody>
         </table>
-        <div id="results">
-            <div></div>
-            <div>
-                <h3>Export</h3>
+        <div id="bottom">
+            <div id="results"></div>
+            <div id="export">
+                <h3 title="You can import copied URLs, row and TSV data, by pasting, i.e., just hit Ctrl+V.">Export
+                    <span id="copied-status"></span>
+                </h3>
                 <div class="fill">
+                    <input type="button" value="Row" id="copy-row">
+                    <input type="button" value="TSV" id="copy-csv">
                     <input type="button" value="LaTeX" id="copy-tex">
-                    <input type="button" value="CSV" id="copy-csv">
-                    <input type="button" value="URL" id="copy-url">
+                    <!-- <input type="button" value="Markdown" id="copy-md"> -->
                 </div>
             </div>
         </div>
