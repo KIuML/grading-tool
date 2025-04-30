@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de-DE">
 
 <head>
     <title>AIML Thesis Grading Tool</title>
@@ -8,12 +8,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="script.js" type="text/javascript"></script>
+    <script src="src/main.js" type="module"></script>
 </head>
 
 <body>
+    <div id="loading">
+        <div class="loader"></div>
+    </div>
     <main>
-        <h1><img src="logo.svg" alt="AIML"> Grading Tool <span>v1.0</span></h1>
+        <h1><img src="logo.svg" alt="AIML"> Grading Tool <span>v2.0</span></h1>
+        <div id="config">
+            <div>
+                <label for="scheme">Grading Scheme:</label>
+                <select id="scheme">
+                    <option value="0">Loading...</option>
+                </select>
+            </div>
+            <div>
+                <label for="lang">Language:</label>
+                <select id="lang">
+                    <option value="en">EN</option>
+                    <option value="de">DE</option>
+                </select>
+            </div>
+        </div>
         <table id="grade-table">
             <thead>
                 <tr>
@@ -21,148 +39,18 @@
                     <th>Grade</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="group">
-                    <td>Working Ethics</td>
-                    <td><span data-group="ethics"></span></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="ethics-familiarization">Familiarization with the topic</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="ethics-familiarization" data-group="ethics">
-                    </td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="ethics-autonomy">Autonomy of the student</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="ethics-autonomy" data-group="ethics"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="ethics-commitment">Commitment/motivation of the student</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="ethics-commitment" data-group="ethics"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="ethics-resources">Use of the offered ressources (tools, machines, etc.)</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="ethics-resources" data-group="ethics"></td>
-                </tr>
-
-                <tr class="group">
-                    <td>Solution</td>
-                    <td><span data-group="solution"></span></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="solution-related-work">Related work</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="solution-related-work" data-group="solution"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="solution-goals">Adherence to the thesis goals</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="solution-goals" data-group="solution"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="solution-quality">Quality of the developed solution(s)</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="solution-quality" data-group="solution">
-                    </td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="solution-documentation">Documentation and reproducability</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="solution-documentation" data-group="solution"></td>
-                </tr>
-
-                <tr class="group">
-                    <td>Written Thesis</td>
-                    <td><span data-group="written"></span></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="written-structure">Structure &amp; readability</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="written-structure" data-group="written">
-                    </td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="written-length">Length, Trade-off between depth/breadth</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="written-length" data-group="written"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="written-presentation">Formal presentation and correctness</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="written-presentation" data-group="written">
-                    </td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="written-language">Language (grammar, orthography, typos, etc.)</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="written-language" data-group="written"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="written-figures">Amount and quality of illustrations and plots</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="written-figures" data-group="written"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="written-references">Citation and references</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="written-references" data-group="written">
-                    </td>
-                </tr>
-
-                <tr class="group">
-                    <td>Defense</td>
-                    <td><span data-group="defense"></span></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="defense-clarity">Clarity of presentation</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="defense-clarity" data-group="defense"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="defense-slides">Quality of the slides</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="defense-slides" data-group="defense"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="defense-contribution">Clear statement of own contribution</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="defense-contribution" data-group="defense">
-                    </td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="defense-related-work">Appreciation of related work</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="defense-related-work" data-group="defense">
-                    </td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="defense-language">Language, rhetoric</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="defense-language" data-group="defense"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="defense-time">Compliance with time constraints</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1" id="defense-time"
-                            data-group="defense"></td>
-                </tr>
-                <tr class="criterion">
-                    <td><label for="defense-discussion">Discussion, response to questions</label></td>
-                    <td><input type="number" lang="de-DE" list="grade-list" min="1" max="5" step="0.1"
-                            id="defense-discussion" data-group="defense">
-                    </td>
-                </tr>
-            </tbody>
+            <tbody></tbody>
         </table>
         <div id="results">
-            <h3>Aggregated Results <select id="scheme">
-                    <option value="0" title="Computes separate written and defense grades.">LMU Scheme</option>
-                    <!-- <option value="1" title="Computes a single written and defense grade.">UPB Scheme</option> -->
-                </select></h3>
-            <p>Written grade: <span id="written">-</span><span class="spacing">&nbsp;</span>Defense grade: <span
-                    id="oral">-</span></p>
+            <div></div>
+            <div>
+                <h3>Export</h3>
+                <div class="fill">
+                    <input type="button" value="LaTeX" id="copy-tex">
+                    <input type="button" value="CSV" id="copy-csv">
+                    <input type="button" value="URL" id="copy-url">
+                </div>
+            </div>
         </div>
     </main>
     <footer>

@@ -19,6 +19,16 @@ select {
     font-variation-settings: "wdth" 100;
 }
 
+#loading {
+    margin: 16px;
+}
+
+#loading .loader {
+    width: 160px;
+    height: 160px;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle fill="none" stroke-opacity="1" stroke="%2300732A" stroke-width=".5" cx="100" cy="100" r="0"><animate attributeName="r" calcMode="spline" dur="2" values="1;80" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-width" calcMode="spline" dur="2" values="0;25" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" calcMode="spline" dur="2" values="1;0" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate></circle></svg>');
+}
+
 a {
     color: #00883A;
     text-decoration: none;
@@ -39,6 +49,7 @@ main {
     max-width: 800px;
     min-width: 500px;
     margin-bottom: 32px;
+    display: none;
 }
 
 footer {
@@ -49,7 +60,8 @@ footer {
 }
 
 h1 {
-    margin: 1em 16px;
+    margin: 16px;
+    margin-top: 1em;
     padding: 0;
     font-weight: 300;
     font-size: 3em;
@@ -59,7 +71,7 @@ h1 {
 h3 {
     margin: 0.5em 0;
     padding: 0;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 p {
@@ -72,6 +84,19 @@ h1 span {
 
 h1 img {
     height: 0.7em;
+}
+
+#config {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 16px;
+    padding: 16px;
+    margin: 16px 0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    background-color: #efefef;
 }
 
 table {
@@ -101,9 +126,14 @@ tr.group td:last-child {
 
 tr.criterion td:first-child {
     padding-left: 16px;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
 }
 
-input {
+input:not([type="button"]) {
     width: 100%;
     box-sizing: border-box;
     appearance: textfield;
@@ -116,16 +146,40 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
+input[type="button"] {
+    background-color: #00883A;
+    color: #ffffff;
+    border: none;
+    padding: 6px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin: 0;
+}
+
+input[type="button"]:hover {
+    background-color: #00732A;
+}
+
+input[type="button"]:active {
+    background-color: #00621C;
+}
+
 tbody tr:last-child td {
     border-bottom: 1px solid #000;
 }
 
 #results {
     font-size: 1.15em;
+    display: flex;
+    gap: 16px;
+}
+
+#results div {
+    flex: 1;
 }
 
 #results p {
-    text-align: center;
+    padding-left: 16px;
 }
 
 #results p span {
@@ -138,6 +192,12 @@ tbody tr:last-child td {
 
 }
 
-#results select {
-    float: right;
+.fill {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.fill>* {
+    flex-grow: 1;
 }
