@@ -19,7 +19,7 @@ const solutionRelatedWork = new Criterion("related-work", { en: "Related work", 
 const solutionGoals = new Criterion("goals", { en: "Adherence to the thesis goals", de: "Lösen der Aufgabenstellung" }, solution);
 const seminarSolutionGoals = new Criterion("goals", { en: "Adherence to the seminar goals", de: "Erfüllung des Seminarziels" }, solution);
 const solutionQuality = new Criterion("quality", { en: "Quality of the developed solution(s)", de: "Qualität der Lösungen" }, solution);
-const solutionDocumentation = new Criterion("documentation", { en: "Documentation and reproducability", de: "Dokumentation und Reproduzierbarkeit" }, solution);
+const solutionDocumentation = new Criterion("documentation", { en: "Documentation and reproducibility", de: "Dokumentation und Reproduzierbarkeit" }, solution);
 const solutionCriteria = [
     solutionRelatedWork,
     solutionGoals,
