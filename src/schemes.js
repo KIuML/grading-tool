@@ -49,8 +49,8 @@ const defenseSlides = new Criterion("slides", { en: "Quality of the slides", de:
 const defenseContribution = new Criterion("contribution", { en: "Clear statement of own contribution", de: "Darstellung der eigenen Leistung" }, defense);
 const defenseRelatedWork = new Criterion("related-work", { en: "Appreciation of related work", de: "Beschreibung verwandter Arbeiten" }, defense);
 const defenseLanguage = new Criterion("language", { en: "Language, rhetoric", de: "Ausdrucksweise und Rhetorik" }, defense);
-const defenseTime = new Criterion("time", { en: "Compliance with time constraints", de: "Antworten auf Fragen" }, defense);
-const defenseDiscussion = new Criterion("discussion", { en: "Discussion, response to questions", de: "Einhalten der Zeitvorgaben" }, defense);
+const defenseTime = new Criterion("time", { en: "Compliance with time constraints", de: "Einhalten der Zeitvorgaben" }, defense);
+const defenseDiscussion = new Criterion("discussion", { en: "Discussion, response to questions", de: "Antworten auf Fragen" }, defense);
 const defenseCriteria = [
     defenseClarity,
     defenseSlides,
