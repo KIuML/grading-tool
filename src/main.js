@@ -37,7 +37,7 @@ function start() {
     document.querySelector("#copy-row").addEventListener("click", () => exportRow());
     document.querySelector("#copy-csv").addEventListener("click", () => exportTSV());
     document.querySelector("#copy-tex").addEventListener("click", () => exportTex());
-    // document.querySelector("#copy-md").addEventListener("click", () => exportMd());
+    document.querySelector("#copy-md").addEventListener("click", () => exportMd());
 
     // Import handler
     document.addEventListener("paste", e => {
@@ -48,7 +48,7 @@ function start() {
             return;
         const data = (e.clipboardData || window.clipboardData).getData("text");
 
-        const match = data.match(/#(c2NoZW1l[^\s\r\n]+)/);
+        const match = data.match(/#(c2NoZW1l[a-zA-Z0-9+/]+=*)/);
 
 
         if (match != null) {
@@ -385,6 +385,6 @@ function exportMd() {
     const scheme = schemes[schemeId];
     const lang = document.querySelector("#lang").value;
     const grades = scheme.computeGrades(inputs);
-    const md = scheme.toMd({ ...inputs, ...grades }, lang);
-    copyToClipboard("MD", md);
+    const md = scheme.toMd({ ...inputs, ...grades }, lang, location.href);
+    copyToClipboard("Markdown", md);
 }

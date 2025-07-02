@@ -1,15 +1,31 @@
 <svg width="403" height="154" viewBox="0 0 403 154" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_496_35)">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M106 0V154H98V0H106Z" fill="#0A9342"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M226 78.5C226 109.152 201.152 134 170.5 134C139.848 134 115 109.152 115 78.5C115 47.8482 139.848 23 170.5 23C201.152 23 226 47.8482 226 78.5ZM166.5 125.834V82.5H123.166C125.087 105.543 143.457 123.913 166.5 125.834ZM123.166 74.5H166.5V31.166C143.457 33.0873 125.087 51.4571 123.166 74.5ZM217.834 82.5C215.913 105.543 197.543 123.913 174.5 125.834V82.5H217.834ZM217.834 74.5H174.5V31.166C197.543 33.0873 215.913 51.4571 217.834 74.5Z" fill="black"/>
-<path d="M83 154V78.5V-1L42.9935 78.5M5 154L42.9935 78.5M42.9935 78.5H68.9984" stroke="black" stroke-width="8" stroke-linecap="square"/>
-<path d="M289 154V78.5V-1L248.994 78.5L211 154" stroke="black" stroke-width="8" stroke-linecap="square"/>
-<path d="M328 154V78.5V-1L287.994 78.5L250 154" stroke="#0A9342" stroke-width="8" stroke-linecap="square"/>
-<path d="M347 0V150H403.5" stroke="#0A9342" stroke-width="8"/>
-</g>
-<defs>
-<clipPath id="clip0_496_35">
-<rect width="403" height="154" fill="white"/>
-</clipPath>
-</defs>
+    <g clip-path="url(#clip0_496_35)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M106 0V154H98V0H106Z" fill="#0A9342" />
+        <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M226 78.5C226 109.152 201.152 134 170.5 134C139.848 134 115 109.152 115 78.5C115 47.8482 139.848 23 170.5 23C201.152 23 226 47.8482 226 78.5ZM166.5 125.834V82.5H123.166C125.087 105.543 143.457 123.913 166.5 125.834ZM123.166 74.5H166.5V31.166C143.457 33.0873 125.087 51.4571 123.166 74.5ZM217.834 82.5C215.913 105.543 197.543 123.913 174.5 125.834V82.5H217.834ZM217.834 74.5H174.5V31.166C197.543 33.0873 215.913 51.4571 217.834 74.5Z"
+            fill="black" />
+        <path d="M83 154V78.5V-1L42.9935 78.5M5 154L42.9935 78.5M42.9935 78.5H68.9984" stroke="black" stroke-width="8"
+            stroke-linecap="square" />
+        <path d="M289 154V78.5V-1L248.994 78.5L211 154" stroke="black" stroke-width="8" stroke-linecap="square" />
+        <path d="M328 154V78.5V-1L287.994 78.5L250 154" stroke="#0A9342" stroke-width="8" stroke-linecap="square" />
+        <path d="M347 0V150H403.5" stroke="#0A9342" stroke-width="8" />
+    </g>
+    <defs>
+        <clipPath id="clip0_496_35">
+            <rect width="403" height="154" fill="white" />
+        </clipPath>
+    </defs>
+    <style type="text/css">
+        <![CDATA[
+        @media (prefers-color-scheme: dark) {
+            path[stroke] {
+                stroke: white;
+            }
+
+            path[fill] {
+                fill: #eee;
+            }
+        }
+        ]]>
+    </style>
 </svg>

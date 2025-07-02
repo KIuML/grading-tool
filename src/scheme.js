@@ -170,7 +170,49 @@ export class Scheme {
         return tex;
     }
 
-    toMd(grades, lang = "en") {
-        // TODO
+    toMd(grades, lang = "en", url = null) {
+        const rows = [
+            [strings.criterion[lang], strings.grade[lang]],
+        ];
+
+        let lastGroup = null;
+        for (let criterion of this.criteria) {
+            if (this.showGroups && criterion.group != null && criterion.group != lastGroup) {
+                let grade = grades[criterion.key];
+                if (grade == null || isNaN(grade))
+                    grade = "";
+                else
+                    grade = "**" + localizeGrade(grade, lang) + "**";
+                rows.push([`**${criterion.group.names[lang]}**`, grade]);
+            }
+            let grade = grades[criterion.key];
+            if (grade == null || isNaN(grade))
+                grade = "";
+            else
+                grade = localizeGrade(grade, lang);
+            rows.push([criterion.names[lang], grade]);
+            lastGroup = criterion.group;
+        }
+
+        const maxCritLen = Math.max(...rows.map(row => row[0].length));
+        const maxGradeLen = Math.max(...rows.map(row => row[1].length));
+
+        if (url != null)
+            rows[0][1] = `[${rows[0][1]}](${url})`;
+
+        const header = `| ${rows[0][0].padEnd(maxCritLen)} | ${rows[0][1].padEnd(maxGradeLen)} |`;
+        const separator = `| ${"-".repeat(maxCritLen)} | ${"-".repeat(maxGradeLen - 1)}: |`;
+        const body = rows.slice(1).map(row => `| ${row[0].padEnd(maxCritLen)} | ${row[1].padEnd(maxGradeLen)} |`).join("\n");
+
+        const footer = this.aggregateCriteria.map(criterion => {
+            const grade = grades[criterion.key];
+            let shownGrade = grade;
+            if (this.roundAggregate)
+                shownGrade = toNearestGrade(grade);
+            shownGrade = gradeToFullString(shownGrade, lang);
+            return `**${criterion.names[lang]}:** ${shownGrade}`;
+        }).join("\n");
+
+        return `${header}\n${separator}\n${body}\n\n${footer}\n`;
     }
 }
