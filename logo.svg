@@ -19,7 +19,7 @@
         <![CDATA[
         @media (prefers-color-scheme: dark) {
             path[stroke] {
-                stroke: white;
+                stroke: #eee;
             }
 
             path[fill] {
