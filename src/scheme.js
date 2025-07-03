@@ -130,7 +130,7 @@ export class Scheme {
         let lastGroup = null;
         for (let criterion of this.criteria) {
             if (this.showGroups && criterion.group != null && criterion.group != lastGroup) {
-                let grade = grades[criterion.key];
+                let grade = grades[criterion.group.key];
                 if (grade == null || isNaN(grade))
                     grade = "-";
                 else
@@ -178,7 +178,7 @@ export class Scheme {
         let lastGroup = null;
         for (let criterion of this.criteria) {
             if (this.showGroups && criterion.group != null && criterion.group != lastGroup) {
-                let grade = grades[criterion.key];
+                let grade = grades[criterion.group.key];
                 if (grade == null || isNaN(grade))
                     grade = "";
                 else
