@@ -15,3 +15,18 @@ export class Criterion {
         return `[Criterion ${this.key}]`;
     }
 }
+
+export class DummyCriterion extends Criterion {
+    constructor(id, names, value = null) {
+        super(id, names);
+        this.value = value;
+    }
+
+    get key() {
+        return `dummy-${this.id}`;
+    }
+
+    toString() {
+        return `[DummyCriterion ${this.id} = ${this.value}]`;
+    }
+}

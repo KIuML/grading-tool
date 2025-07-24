@@ -60,9 +60,9 @@ select {
 }
 
 main {
-    width: 40%;
+    width: 50%;
     max-width: 800px;
-    min-width: 500px;
+    min-width: calc(min(600px, max(80%, 400px)));
     margin-bottom: 32px;
     display: none;
 }

@@ -1,12 +1,12 @@
-import { Criterion } from "./criterion.js";
+import { Criterion, DummyCriterion } from "./criterion.js";
 import { aggregateGrade, Scheme } from "./scheme.js";
 import { GradeMeasure } from "./measure.js";
 
 const ethics = new Criterion("ethics", { en: "Working Ethics", de: "Arbeitsweise" });
 const ethicsFamiliarization = new Criterion("familiarization", { en: "Familiarization with the topic", de: "Einarbeitung in die Aufgabenstellung" }, ethics);
-const ethicsAutonomy = new Criterion("autonomy", { en: "Autonomy of the student", de: "Eigenständigkeit" }, ethics);
-const ethicsCommitment = new Criterion("commitment", { en: "Commitment/motivation of the student", de: "Einsatz und Engagement" }, ethics);
-const ethicsResources = new Criterion("resources", { en: "Use of the offered ressources (tools, machines, etc.)", de: "Nutzung von Ressourcen (Tools, Rechner, etc.)" }, ethics);
+const ethicsAutonomy = new Criterion("autonomy", { en: "Independence and autonomy", de: "Eigenständigkeit" }, ethics);
+const ethicsCommitment = new Criterion("commitment", { en: "Commitment and engagement", de: "Einsatz und Engagement" }, ethics);
+const ethicsResources = new Criterion("resources", { en: "Utilization of resources (tools, computer infrastructure, etc.)", de: "Nutzung von Ressourcen (Tools, Rechner, etc.)" }, ethics);
 const ethicsCriteria = [
     ethicsFamiliarization,
     ethicsAutonomy,
@@ -14,11 +14,11 @@ const ethicsCriteria = [
     ethicsResources,
 ];
 
-const solution = new Criterion("solution", { en: "Solution", de: "Inhalt und Ergebnisse" });
-const solutionRelatedWork = new Criterion("related-work", { en: "Related work", de: "Aufarbeiten relevanter Literatur" }, solution);
+const solution = new Criterion("solution", { en: "Content and Results", de: "Inhalt und Ergebnisse" });
+const solutionRelatedWork = new Criterion("related-work", { en: "Documentation of related work", de: "Aufarbeiten relevanter Literatur" }, solution);
 const solutionGoals = new Criterion("goals", { en: "Adherence to the thesis goals", de: "Lösen der Aufgabenstellung" }, solution);
 const seminarSolutionGoals = new Criterion("goals", { en: "Adherence to the seminar goals", de: "Erfüllung des Seminarziels" }, solution);
-const solutionQuality = new Criterion("quality", { en: "Quality of the developed solution(s)", de: "Qualität der Lösungen" }, solution);
+const solutionQuality = new Criterion("quality", { en: "Quality of the solution(s)", de: "Qualität der Lösungen" }, solution);
 const solutionDocumentation = new Criterion("documentation", { en: "Documentation and reproducibility", de: "Dokumentation und Reproduzierbarkeit" }, solution);
 const solutionCriteria = [
     solutionRelatedWork,
@@ -28,12 +28,12 @@ const solutionCriteria = [
 ];
 
 const written = new Criterion("written", { en: "Written Thesis", de: "Schriftliche Ausarbeitung" });
-const writtenStructure = new Criterion("structure", { en: "Structure & readability", de: "Struktur und Lesbarkeit der Arbeit" }, written);
-const writtenLength = new Criterion("length", { en: "Length, Trade-off between depth/breadth", de: "Länge der Arbeit, Balance zwischen Breite und Tiefe" }, written);
+const writtenStructure = new Criterion("structure", { en: "Structure and readability", de: "Struktur und Lesbarkeit der Arbeit" }, written);
+const writtenLength = new Criterion("length", { en: "Length, balance between breadth and depth", de: "Länge der Arbeit, Balance zwischen Breite und Tiefe" }, written);
 const writtenPresentation = new Criterion("presentation", { en: "Formal presentation and correctness", de: "Formale Darstellung und Korrektheit" }, written);
-const writtenLanguage = new Criterion("language", { en: "Language (grammar, orthography, typos, etc.)", de: "Sprachliche Qualität (Grammatik, Orthographie, Tippfehler, etc.)" }, written);
-const writtenFigures = new Criterion("figures", { en: "Amount and quality of illustrations and plots", de: "Umfang und Qualität von Illustrationen, Abbildungen, Tabellen, etc." }, written);
-const writtenReferences = new Criterion("references", { en: "Citation and references", de: "Referenzen und Literaturverzeichnis (Umfang, Vollständigkeit, etc.)" }, written);
+const writtenLanguage = new Criterion("language", { en: "Linguistic quality (grammar, orthography, typos, etc.)", de: "Sprachliche Qualität (Grammatik, Orthographie, Tippfehler, etc.)" }, written);
+const writtenFigures = new Criterion("figures", { en: "Amount and quality of illustrations, figures, tables, etc.", de: "Umfang und Qualität von Illustrationen, Abbildungen, Tabellen, etc." }, written);
+const writtenReferences = new Criterion("references", { en: "Citation and references (coverage, correctness, etc.)", de: "Referenzen und Literaturverzeichnis (Umfang, Korrektheit, etc.)" }, written);
 const writtenCriteria = [
     writtenStructure,
     writtenLength,
@@ -42,6 +42,7 @@ const writtenCriteria = [
     writtenFigures,
     writtenReferences,
 ];
+const thesisSubmissionDate = new DummyCriterion("thesis-submission-date", { en: "Final Thesis Submission Date", de: "Abgabedatum der finalen Arbeit" }, "DD.MM.YYYY");
 
 const defense = new Criterion("defense", { en: "Defense", de: "Verteidigung der Arbeit" });
 const defenseClarity = new Criterion("clarity", { en: "Clarity of presentation", de: "Verständlichkeit der Präsentation" }, defense);
@@ -60,6 +61,7 @@ const defenseCriteria = [
     defenseTime,
     defenseDiscussion,
 ];
+const defenseDate = new DummyCriterion("defense-date", { en: "Defense Date", de: "Verteidigungsdatum" }, "DD.MM.YYYY");
 
 const thesisCriteria = [
     ...ethicsCriteria, ...solutionCriteria, ...writtenCriteria, ...defenseCriteria
@@ -150,7 +152,7 @@ class SplitThesisScheme extends Scheme {
     }
 
     get aggregateCriteria() {
-        return [aggregateWritten, aggregateOral];
+        return [aggregateWritten, thesisSubmissionDate, aggregateOral, defenseDate];
     }
 
     aggregateGroupGrades(groupGrades) {

@@ -44,11 +44,19 @@ export const strings = {
         de: "ungenügend"
     },
     individualGrades: {
-        en: "Individual Grades",
-        de: "Einzelbewertung"
+        en: "Assessment of individual criteria",
+        de: "Bewertung der Einzelkriterien"
     },
     remarks: {
         en: "Remarks",
         de: "Bemerkungen"
+    },
+    summary: {
+        en: "Summary",
+        de: "Zusammenfassung"
+    },
+    finalGrade: {
+        en: "Final Grade",
+        de: "Endnote"
     }
 };

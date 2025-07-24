@@ -181,16 +181,16 @@ function materializeScheme(scheme, lang) {
         gradeTableBody.appendChild(row);
     }
 
-    if (scheme.aggregateCriteria.length == 1) {
+    if (scheme.computedAggregateCriteria.length == 1) {
         document.querySelector("#results").innerHTML = `
             <h3>${strings.aggResult[lang]}</h3>
-            <p><span id="${scheme.aggregateCriteria[0].key}"></span></p>
+            <p><span id="${scheme.computedAggregateCriteria[0].key}"></span></p>
         `;
     }
     else
         document.querySelector("#results").innerHTML = `
             <h3>${strings.aggResults[lang]}</h3>
-            ${scheme.aggregateCriteria.map(criterion => `
+            ${scheme.computedAggregateCriteria.map(criterion => `
                 <p>${criterion.names[lang]}: <span id="${criterion.key}">-</span></p>
             `).join("")}
         `;

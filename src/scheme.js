@@ -1,4 +1,4 @@
-import { Criterion } from "./criterion.js";
+import { Criterion, DummyCriterion } from "./criterion.js";
 import { localizeGrade, weightedAverage, gradeToFullString, toNearestGrade } from "./gradeUtils.js";
 import { strings } from "./strings.js";
 
@@ -51,6 +51,10 @@ export class Scheme {
         return [aggregateGrade];
     }
 
+    get computedAggregateCriteria() {
+        return this.aggregateCriteria.filter(criterion => !(criterion instanceof DummyCriterion));
+    }
+
     get groupCriteria() {
         if (!this.showGroups)
             return [];
@@ -100,6 +104,9 @@ export class Scheme {
         const aggregateCriteria = new Set(this.aggregateCriteria);
 
         for (let criterion of this.allCriteria) {
+            if (criterion instanceof DummyCriterion)
+                continue;
+
             let grade = grades[criterion.key];
             if (grade == null || isNaN(grade))
                 grade = "";
@@ -121,13 +128,13 @@ export class Scheme {
             "",
             "\\begin{center}",
             "\\begin{tabular}{lcc}",
-            "\\hline",
-            `\\textbf{${strings.criterion[lang]}} & \\textbf{${strings.grade[lang]}} \\\\`,
-            "\\hline",
-            ""
+            "\t\\hline",
+            `\t\\textbf{${strings.criterion[lang]}} & \\textbf{${strings.grade[lang]}} \\\\`,
+            "\t\\hline \\\\",
         ].join("\n");
 
         let lastGroup = null;
+        let groupCount = 0;
         for (let criterion of this.criteria) {
             if (this.showGroups && criterion.group != null && criterion.group != lastGroup) {
                 let grade = grades[criterion.group.key];
@@ -135,37 +142,54 @@ export class Scheme {
                     grade = "-";
                 else
                     grade = localizeGrade(grade, lang);
-                tex += `\\textbf{${criterion.group.names[lang].replace("&", "\\&")}} & \\\\ % ${grade}\n`;
+                tex += `[${groupCount == 0 ? 0 : 2}mm]\n\t\\textbf{${criterion.group.names[lang].replace("&", "\\&")}} & \\\\ % ${grade}\n`;
+                groupCount++;
             }
             let grade = grades[criterion.key];
             if (grade == null || isNaN(grade))
                 grade = "-";
             else
                 grade = localizeGrade(grade, lang);
-            tex += `${criterion.names[lang].replace("&", "\\&")} & ${grade} \\\\\n`
+            tex += `\t${criterion.names[lang].replace("&", "\\&")} & ${grade} \\\\\n`
             lastGroup = criterion.group;
         }
 
         tex += [
-            "\\end{tabular}", "\\end{center}", "",
-            `\\subsection*{${strings.remarks[lang]}:}`,
-            "", "",
-            `\\subsection*{${strings[this.aggregateCriteria.length == 1 ? "aggResult" : "aggResults"][lang]}:}`,
-            ""
+            "\\end{tabular}", "\\end{center}", "", ""
         ].join("\n");
+
+        if (this.aggregateCriteria.length == 1)
+            tex += `\\subsection*{${strings.aggResult[lang]}:}\n`;
+        else
+            tex += [
+                `\\subsection*{${strings.summary[lang]}:}`,
+                "",
+                `\\begin{itemize}`,
+                ""
+            ].join("\n");
 
         tex += this.aggregateCriteria.map(criterion => {
             const grade = grades[criterion.key];
             let shownGrade = grade;
-            if (this.roundAggregate)
-                shownGrade = toNearestGrade(grade);
-            shownGrade = gradeToFullString(shownGrade, lang);
-            if (this.roundAggregate)
-                shownGrade += ` % ${localizeGrade(grade, lang)}`;
-            if (this.aggregateCriteria.length > 1)
-                return `\\textbf{${criterion.names[lang]}:}\n${shownGrade}`;
+            if (criterion instanceof DummyCriterion) {
+                shownGrade = criterion.value;
+                if (this.aggregateCriteria.length > 1)
+                    shownGrade = `\t\\item ${criterion.names[lang]}: ${shownGrade}`;
+            }
+            else {
+                if (this.roundAggregate)
+                    shownGrade = toNearestGrade(grade);
+                shownGrade = gradeToFullString(shownGrade, lang);
+                if (this.aggregateCriteria.length > 1)
+                    shownGrade = `\t\\item ${strings.finalGrade[lang]} ${criterion.names[lang]}: \\textbf{${shownGrade}}`;
+                if (this.roundAggregate)
+                    shownGrade += ` % ${localizeGrade(grade, lang)}`;
+            }
             return shownGrade;
-        }).join("\n\\qquad\n");
+        }).join("\n");
+
+        if (this.aggregateCriteria.length > 1)
+            tex += "\n\\end{itemize}";
 
         return tex;
     }
@@ -204,14 +228,15 @@ export class Scheme {
         const separator = `| ${"-".repeat(maxCritLen)} | ${"-".repeat(maxGradeLen - 1)}: |`;
         const body = rows.slice(1).map(row => `| ${row[0].padEnd(maxCritLen)} | ${row[1].padEnd(maxGradeLen)} |`).join("\n");
 
-        const footer = this.aggregateCriteria.map(criterion => {
-            const grade = grades[criterion.key];
-            let shownGrade = grade;
-            if (this.roundAggregate)
-                shownGrade = toNearestGrade(grade);
-            shownGrade = gradeToFullString(shownGrade, lang);
-            return `**${criterion.names[lang]}:** ${shownGrade}`;
-        }).join("\n");
+        const footer = this.computedAggregateCriteria
+            .map(criterion => {
+                const grade = grades[criterion.key];
+                let shownGrade = grade;
+                if (this.roundAggregate)
+                    shownGrade = toNearestGrade(grade);
+                shownGrade = gradeToFullString(shownGrade, lang);
+                return `**${criterion.names[lang]}:** ${shownGrade}`;
+            }).join("\n");
 
         return `${header}\n${separator}\n${body}\n\n${footer}\n`;
     }
