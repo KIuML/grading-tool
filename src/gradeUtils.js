@@ -42,7 +42,10 @@ export function weightedAverage(grades, weights = undefined) {
     }
     if (totalWeight == 0)
         return NaN;
-    return sum / totalWeight;
+    const res = sum / totalWeight;
+    if (res < 1)
+        return 1.0;
+    return res;
 }
 
 export function localizeGrade(grade, lang = "de") {

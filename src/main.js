@@ -32,6 +32,13 @@ function start() {
             computeGrades(true, newHash);
         });
     }
+    else {
+        // Firefox navigation support
+        window.addEventListener("hashchange", () => {
+            const newHash = location.hash.slice(1);
+            computeGrades(true, newHash);
+        });
+    }
 
     // Export handlers
     document.querySelector("#copy-row").addEventListener("click", () => exportRow());
@@ -280,6 +287,10 @@ function readInputs() {
             else
                 val = 5.0;
             input.value = val.toFixed(1);
+        }
+        if (val < 0) {
+            val = NaN;
+            input.value = "";
         }
         inputValues[input.id] = val;
     }

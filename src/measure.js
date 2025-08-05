@@ -71,6 +71,8 @@ export class GradeMeasure extends Measure {
                 return NaN;
             if (grade > 4)
                 return 5.0;
+            if (grade < 1)
+                return 1.0;
             groupUnitGrades[group] = gradeToUnit(grade);
         }
 
