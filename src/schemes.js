@@ -1,6 +1,7 @@
 import { Criterion, DummyCriterion } from "./criterion.js";
 import { aggregateGrade, Scheme } from "./scheme.js";
-import { GradeMeasure } from "./measure.js";
+import { GradeChoquetMeasure, GradeWeightedAverageMeasure } from "./measure.js";
+import { weightedAverage } from "./gradeUtils.js";
 
 const ethics = new Criterion("ethics", { en: "Working Ethics", de: "Arbeitsweise" });
 const ethicsFamiliarization = new Criterion("familiarization", { en: "Familiarization with the topic", de: "Einarbeitung in die Aufgabenstellung" }, ethics);
@@ -108,7 +109,7 @@ const defaultWeights = {
     [defenseDiscussion.key]: 2,
 };
 
-const withoutDefenseMeasure = new GradeMeasure(
+const withoutDefenseMeasure = new GradeChoquetMeasure(
     [[], 4.0],
     [[ethics.key], 4.0],
     [[written.key], 3.0],
@@ -118,7 +119,7 @@ const withoutDefenseMeasure = new GradeMeasure(
     [[solution.key, written.key], 1.3],
     [[ethics.key, solution.key, written.key], 1.0],
 );
-const withDefenseMeasure = new GradeMeasure(
+const withDefenseMeasure = new GradeChoquetMeasure(
     [[], 4.0],
     [[ethics.key], 4.0],
     [[written.key], 3.3],
@@ -136,6 +137,12 @@ const withDefenseMeasure = new GradeMeasure(
     [[solution.key, written.key, defense.key], 1.0],
     [[ethics.key, solution.key, written.key, defense.key], 1.0],
 );
+const seminarWeightedMeasure = new GradeWeightedAverageMeasure({
+    [ethics.key]: 1,
+    [solution.key]: 3,
+    [written.key]: 3,
+    [defense.key]: 3,
+});
 
 class SplitThesisScheme extends Scheme {
     weights = defaultWeights
@@ -157,20 +164,25 @@ class SplitThesisScheme extends Scheme {
 
     aggregateGroupGrades(groupGrades) {
         return {
-            [aggregateWritten.key]: this.measure.aggregateChoquet(groupGrades),
+            [aggregateWritten.key]: this.measure.aggregate(groupGrades),
             [aggregateOral.key]: groupGrades[defense.key]
         };
     }
 }
 
-class SeminarScheme extends SplitThesisScheme {
-    names = { "en": "Seminar paper", "de": "Seminararbeit" }
+class SeminarChoquetScheme extends Scheme {
+    weights = defaultWeights
+    measure = withDefenseMeasure
+    names = { "en": "Seminar paper (old)", "de": "Seminararbeit (alt)" }
     descriptions = {
-        "en": "Computes a grade for a seminar.",
-        "de": "Berechnet eine Note für ein Seminar."
+        "en": "Computes a grade for a seminar using a Choquet integral.",
+        "de": "Berechnet eine Note für ein Seminar mittels Choquet-Integral."
     }
     criteria = seminarCriteria
-    measure = withDefenseMeasure
+
+    getCriterionWeight(key) {
+        return this.weights[key];
+    }
 
     get aggregateCriteria() {
         return [aggregateGrade];
@@ -178,7 +190,32 @@ class SeminarScheme extends SplitThesisScheme {
 
     aggregateGroupGrades(groupGrades) {
         return {
-            [aggregateGrade.key]: this.measure.aggregateChoquet(groupGrades)
+            [aggregateGrade.key]: this.measure.aggregate(groupGrades)
+        };
+    }
+}
+
+class SeminarWeightedScheme extends Scheme {
+    weights = defaultWeights
+    measure = seminarWeightedMeasure
+    names = { "en": "Seminar paper (WS25/26)", "de": "Seminararbeit (WS25/26)" }
+    descriptions = {
+        "en": "Computes a grade for a seminar.",
+        "de": "Berechnet eine Note für ein Seminar."
+    }
+    criteria = seminarCriteria
+
+    getCriterionWeight(key) {
+        return this.weights[key];
+    }
+
+    get aggregateCriteria() {
+        return [aggregateGrade];
+    }
+
+    aggregateGroupGrades(groupGrades) {
+        return {
+            [aggregateGrade.key]: this.measure.aggregate(groupGrades)
         };
     }
 }
@@ -223,14 +260,15 @@ class CombinedThesisScheme extends SplitThesisScheme {
 
     aggregateGroupGrades(groupGrades) {
         return {
-            [aggregateGrade.key]: this.measure.aggregateChoquet(groupGrades)
+            [aggregateGrade.key]: this.measure.aggregate(groupGrades)
         };
     }
 }
 
 export const schemes = {
     0: new SplitThesisScheme(),
-    "seminar": new SeminarScheme(),
+    "seminar_w1": new SeminarWeightedScheme(),
+    "seminar": new SeminarChoquetScheme(),
     "talk": new TalkScheme(),
     "combined": new CombinedThesisScheme(),
 };

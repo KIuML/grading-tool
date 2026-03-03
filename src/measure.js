@@ -1,7 +1,15 @@
-import { gradeToUnit, unitToGrade } from "./gradeUtils.js";
+import { gradeToUnit, unitToGrade, weightedAverage } from "./gradeUtils.js";
 
 export class Measure {
+    aggregate(_elementValues) {
+        throw new Error("Not implemented");
+    }
+}
+
+export class ChoquetMeasure extends Measure {
     constructor(...kvs) {
+        super();
+
         const elements = new Set();
         for (let [subset, _] of kvs)
             for (let e of subset)
@@ -31,7 +39,7 @@ export class Measure {
         return this.map.get(idx);
     }
 
-    aggregateChoquet(elementValues) {
+    aggregate(elementValues) {
         const elementKvs = Object.entries(elementValues);
         elementKvs.sort((a, b) => a[1] - b[1]);
         const sortedElements = elementKvs.map(([element, _value]) => element);
@@ -55,13 +63,13 @@ export class Measure {
     }
 }
 
-export class GradeMeasure extends Measure {
+export class GradeChoquetMeasure extends ChoquetMeasure {
     constructor(...kvs) {
         const transformedKvs = kvs.map(([subset, grade]) => [subset, gradeToUnit(grade)]);
         super(...transformedKvs);
     }
 
-    aggregateChoquet(groupGrades) {
+    aggregate(groupGrades) {
 
         const groupUnitGrades = {};
         for (let [group, grade] of Object.entries(groupGrades)) {
@@ -76,8 +84,27 @@ export class GradeMeasure extends Measure {
             groupUnitGrades[group] = gradeToUnit(grade);
         }
 
-        const integral = super.aggregateChoquet(groupUnitGrades);
+        const integral = super.aggregate(groupUnitGrades);
 
         return unitToGrade(integral);
+    }
+}
+
+export class GradeWeightedAverageMeasure extends Measure {
+    constructor(weights) {
+        super();
+        this.weights = weights;
+    }
+
+    aggregate(groupGrades) {
+        const grades = [];
+        const weights = [];
+        for (let [group, grade] of Object.entries(groupGrades)) {
+            if (this.weights[group] == null)
+                continue;
+            grades.push(grade);
+            weights.push(this.weights[group]);
+        }
+        return weightedAverage(grades, weights);
     }
 }
